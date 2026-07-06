@@ -1,0 +1,1986 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel - Gym</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <style>
+    /* ===== RESET & BASE ===== */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        transition: all 0.3s ease;
+    }
+
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6;
+        color: #2d2d2d;
+        background: #f8f9fa;
+        display: flex;
+        min-height: 100vh;
+        transition: all 0.3s ease;
+    }
+
+    /* ===== LEFT SIDEBAR ===== */
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 260px;
+        height: 100vh;
+        background: #1a1a2e;
+        padding: 25px 20px;
+        overflow-y: auto;
+        z-index: 1000;
+        border-right: 1px solid rgba(255, 255, 255, 0.05);
+        transition: all 0.3s ease;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .sidebar .sidebar-logo {
+        font-size: 26px;
+        font-weight: 800;
+        color: #ff6b35;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        background: linear-gradient(135deg, #ff6b35, #ff4500);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        cursor: pointer;
+        text-decoration: none;
+        display: block;
+        padding-bottom: 25px;
+        margin-bottom: 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .sidebar .sidebar-logo::after {
+        content: "⚡";
+        font-size: 20px;
+        -webkit-text-fill-color: initial;
+        margin-left: 4px;
+        color: #ff6b35;
+    }
+
+    .sidebar .sidebar-user {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 15px 12px;
+        background: rgba(255, 255, 255, 0.04);
+        border-radius: 12px;
+        margin-bottom: 25px;
+    }
+
+    .sidebar .sidebar-user .avatar {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #ff6b35, #e5532d);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-weight: 700;
+        font-size: 16px;
+        flex-shrink: 0;
+    }
+
+    .sidebar .sidebar-user .user-info .name {
+        color: #fff;
+        font-weight: 600;
+        font-size: 15px;
+    }
+
+    .sidebar .sidebar-user .user-info .role {
+        color: #888;
+        font-size: 12px;
+    }
+
+    /* ===== NAV MENU ===== */
+    .sidebar .nav-menu {
+        list-style: none;
+        padding: 0;
+        flex: 1;
+    }
+
+    .sidebar .nav-menu li {
+        margin-bottom: 4px;
+    }
+
+    .sidebar .nav-menu li a {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: #888;
+        text-decoration: none;
+        padding: 12px 15px;
+        border-radius: 10px;
+        font-size: 14px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    .sidebar .nav-menu li a i {
+        width: 20px;
+        font-size: 16px;
+        text-align: center;
+    }
+
+    .sidebar .nav-menu li a:hover {
+        color: #fff;
+        background: rgba(255, 107, 53, 0.08);
+    }
+
+    .sidebar .nav-menu li a.active {
+        color: #ff6b35;
+        background: rgba(255, 107, 53, 0.12);
+    }
+
+    .sidebar .nav-menu li a .badge {
+        margin-left: auto;
+        background: #ff6b35;
+        color: #fff;
+        font-size: 10px;
+        padding: 2px 10px;
+        border-radius: 50px;
+        font-weight: 600;
+    }
+
+    /* ===== SIDEBAR FOOTER (Settings & Logout) ===== */
+    .sidebar .sidebar-footer {
+        margin-top: auto;
+        padding-top: 15px;
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .sidebar .sidebar-footer .footer-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: #888;
+        text-decoration: none;
+        padding: 12px 15px;
+        border-radius: 10px;
+        font-size: 14px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        border: none;
+        background: none;
+        width: 100%;
+        font-family: inherit;
+    }
+
+    .sidebar .sidebar-footer .footer-item:hover {
+        color: #ff6b35;
+        background: rgba(255, 107, 53, 0.08);
+    }
+
+    .sidebar .sidebar-footer .footer-item i {
+        width: 20px;
+        text-align: center;
+        font-size: 16px;
+    }
+
+    .sidebar .sidebar-footer .footer-item.logout {
+        color: #e74c3c;
+    }
+
+    .sidebar .sidebar-footer .footer-item.logout:hover {
+        color: #fff;
+        background: rgba(231, 76, 60, 0.15);
+    }
+
+    /* ===== MAIN CONTENT ===== */
+    .main-content {
+        margin-left: 260px;
+        flex: 1;
+        padding: 30px 40px;
+        min-height: 100vh;
+        background: #f8f9fa;
+        transition: all 0.3s ease;
+    }
+
+    /* ===== TOP HEADER ===== */
+    .top-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    }
+
+    .top-header .page-title h1 {
+        font-size: 28px;
+        font-weight: 700;
+        color: #1a1a2e;
+    }
+
+    .top-header .page-title p {
+        color: #888;
+        font-size: 14px;
+        margin-top: 4px;
+    }
+
+    .top-header .header-actions {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .top-header .header-actions .icon-btn {
+        background: rgba(0, 0, 0, 0.04);
+        border: 1px solid rgba(0, 0, 0, 0.06);
+        color: #2d2d2d;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        font-size: 16px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: none;
+        outline: none;
+    }
+
+    .top-header .header-actions .icon-btn:hover {
+        background: #ff6b35;
+        color: #fff;
+        transform: scale(1.05);
+        box-shadow: 0 0 20px rgba(255, 107, 53, 0.3);
+    }
+
+    .top-header .header-actions .icon-btn.dark-btn {
+        background: rgba(0, 0, 0, 0.04);
+        border: 1px solid rgba(0, 0, 0, 0.06);
+        color: #2d2d2d;
+    }
+
+    .hamburger {
+        display: none;
+        flex-direction: column;
+        gap: 5px;
+        cursor: pointer;
+        padding: 5px;
+        background: transparent;
+        border: none;
+    }
+
+    .hamburger span {
+        display: block;
+        width: 25px;
+        height: 3px;
+        background: #2d2d2d;
+        border-radius: 3px;
+        transition: all 0.3s ease;
+    }
+
+    .hamburger.active span:nth-child(1) {
+        transform: rotate(45deg) translate(5px, 6px);
+    }
+
+    .hamburger.active span:nth-child(2) {
+        opacity: 0;
+    }
+
+    .hamburger.active span:nth-child(3) {
+        transform: rotate(-45deg) translate(5px, -6px);
+    }
+
+    .top-header .profile-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #ff6b35, #e5532d);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-weight: 700;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .top-header .profile-avatar:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 20px rgba(255, 107, 53, 0.3);
+    }
+
+    /* ===== PAGE CONTENT SECTIONS ===== */
+    .page-section {
+        display: none;
+        animation: fadeIn 0.5s ease;
+    }
+
+    .page-section.active {
+        display: block;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ===== DARK MODE ===== */
+    body.dark-mode .sidebar {
+        background: #0a0a14 !important;
+        border-color: rgba(255, 255, 255, 0.03) !important;
+    }
+
+    body.dark-mode .main-content {
+        background: #0a0a14 !important;
+    }
+
+    body.dark-mode .top-header .page-title h1 {
+        color: #ffffff !important;
+    }
+
+    body.dark-mode .top-header .page-title p {
+        color: #aaaaaa !important;
+    }
+
+    body.dark-mode .top-header .header-actions .icon-btn {
+        background: rgba(255, 255, 255, 0.05) !important;
+        border-color: rgba(255, 255, 255, 0.08) !important;
+        color: #e0e0e0 !important;
+    }
+
+    body.dark-mode .top-header .header-actions .icon-btn:hover {
+        background: #ff6b35 !important;
+        color: #ffffff !important;
+    }
+
+    body.dark-mode .top-header .header-actions .icon-btn.dark-btn {
+        background: rgba(255, 255, 255, 0.05) !important;
+        border-color: rgba(255, 255, 255, 0.08) !important;
+        color: #e0e0e0 !important;
+    }
+
+    body.dark-mode .dashboard-card,
+    body.dark-mode .activity-item,
+    body.dark-mode .stats-card {
+        background: #1a1a2e !important;
+        border-color: rgba(255, 255, 255, 0.05) !important;
+    }
+
+    body.dark-mode .dashboard-card h3,
+    body.dark-mode .dashboard-card p,
+    body.dark-mode .stats-card .number,
+    body.dark-mode .stats-card .label,
+    body.dark-mode .activity-item p,
+    body.dark-mode .activity-item .time {
+        color: #e0e0e0 !important;
+    }
+
+    body.dark-mode .chart-placeholder {
+        background: linear-gradient(135deg, #1a1a2e 0%, #2a2a3e 100%);
+        color: #aaa;
+    }
+
+    body.dark-mode .quick-action-btn {
+        border-color: #3a3a4e;
+        color: #e0e0e0;
+    }
+
+    body.dark-mode .quick-action-btn:hover {
+        border-color: #ff6b35;
+        background: rgba(255, 107, 53, 0.08);
+    }
+
+    body.dark-mode .hamburger span {
+        background: #e0e0e0;
+    }
+
+    body.dark-mode .top-header {
+        border-color: rgba(255, 255, 255, 0.05);
+    }
+
+    body.dark-mode .classes-grid .class-card {
+        background: #1a1a2e !important;
+        border-color: rgba(255, 255, 255, 0.05) !important;
+    }
+
+    body.dark-mode .classes-grid .class-card h3,
+    body.dark-mode .classes-grid .class-card p {
+        color: #e0e0e0 !important;
+    }
+
+    body.dark-mode .membership-card {
+        background: #1a1a2e !important;
+        border-color: rgba(255, 255, 255, 0.05) !important;
+    }
+
+    body.dark-mode .membership-card h3,
+    body.dark-mode .membership-card p,
+    body.dark-mode .membership-card .price {
+        color: #e0e0e0 !important;
+    }
+
+    /* ===== RTL MODE ===== */
+    html.rtl-mode .sidebar {
+        left: auto;
+        right: 0;
+        border-right: none;
+        border-left: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    html.rtl-mode .main-content {
+        margin-left: 0;
+        margin-right: 260px;
+    }
+
+    html.rtl-mode .sidebar .nav-menu li a .badge {
+        margin-left: 0;
+        margin-right: auto;
+    }
+
+    html.rtl-mode .sidebar .nav-menu li a {
+        flex-direction: row-reverse;
+    }
+
+    html.rtl-mode .sidebar .sidebar-footer .footer-item {
+        flex-direction: row-reverse;
+    }
+
+    html.rtl-mode .top-header {
+        flex-direction: row-reverse;
+    }
+
+    html.rtl-mode .top-header .header-actions {
+        flex-direction: row-reverse;
+    }
+
+    html.rtl-mode .dashboard-grid {
+        direction: rtl;
+    }
+
+    html.rtl-mode .stats-grid {
+        direction: rtl;
+    }
+
+    html.rtl-mode .stats-card {
+        direction: rtl;
+        text-align: right;
+    }
+
+    html.rtl-mode .activity-item {
+        direction: rtl;
+        text-align: right;
+    }
+
+    html.rtl-mode .activity-item .icon {
+        margin-right: 0;
+        margin-left: 15px;
+    }
+
+    /* ===== DASHBOARD PAGE SPECIFIC STYLES ===== */
+    .stats-grid {
+        max-width: 100%;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+
+    .stats-card {
+        background: #fff;
+        border-radius: 16px;
+        padding: 20px 25px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+        border: 1px solid rgba(0, 0, 0, 0.04);
+        transition: all 0.4s ease;
+        display: flex;
+        align-items: center;
+        gap: 18px;
+    }
+
+    .stats-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 40px rgba(255, 107, 53, 0.08);
+        border-color: rgba(255, 107, 53, 0.12);
+    }
+
+    .stats-card .icon-box {
+        width: 50px;
+        height: 50px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        flex-shrink: 0;
+    }
+
+    .stats-card .icon-box.blue {
+        background: rgba(52, 152, 219, 0.12);
+        color: #3498db;
+    }
+
+    .stats-card .icon-box.green {
+        background: rgba(46, 204, 113, 0.12);
+        color: #2ecc71;
+    }
+
+    .stats-card .icon-box.orange {
+        background: rgba(255, 107, 53, 0.12);
+        color: #ff6b35;
+    }
+
+    .stats-card .icon-box.purple {
+        background: rgba(155, 89, 182, 0.12);
+        color: #9b59b6;
+    }
+
+    .stats-card .info .number {
+        font-size: 26px;
+        font-weight: 800;
+        color: #1a1a2e;
+        display: block;
+        line-height: 1.2;
+    }
+
+    .stats-card .info .label {
+        font-size: 13px;
+        color: #888;
+        font-weight: 500;
+    }
+
+    .stats-card .info .trend {
+        font-size: 12px;
+        font-weight: 600;
+        margin-left: 6px;
+    }
+
+    .stats-card .info .trend.up {
+        color: #2ecc71;
+    }
+
+    .stats-card .info .trend.down {
+        color: #e74c3c;
+    }
+
+    .dashboard-grid {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 25px;
+        margin-bottom: 30px;
+    }
+
+    .dashboard-card {
+        background: #fff;
+        border-radius: 16px;
+        padding: 25px 30px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+        border: 1px solid rgba(0, 0, 0, 0.04);
+        transition: all 0.4s ease;
+    }
+
+    .dashboard-card:hover {
+        box-shadow: 0 10px 40px rgba(255, 107, 53, 0.06);
+    }
+
+    .dashboard-card .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 18px;
+    }
+
+    .dashboard-card .card-header h3 {
+        font-size: 17px;
+        color: #1a1a2e;
+        font-weight: 700;
+    }
+
+    .dashboard-card .card-header a {
+        color: #ff6b35;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    .dashboard-card .card-header a:hover {
+        text-decoration: underline;
+    }
+
+    /* Attendance Chart - Reduced Height */
+    .chart-placeholder {
+        width: 100%;
+        height: 180px;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #888;
+        font-size: 14px;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .chart-placeholder .chart-icon {
+        font-size: 40px;
+        color: #ff6b35;
+    }
+
+    .activity-list {
+        list-style: none;
+    }
+
+    .activity-item {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 10px 0;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .activity-item:last-child {
+        border-bottom: none;
+    }
+
+    body.dark-mode .activity-item {
+        border-color: rgba(255, 255, 255, 0.05);
+    }
+
+    .activity-item .icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        flex-shrink: 0;
+    }
+
+    .activity-item .icon.green {
+        background: rgba(46, 204, 113, 0.12);
+        color: #2ecc71;
+    }
+
+    .activity-item .icon.blue {
+        background: rgba(52, 152, 219, 0.12);
+        color: #3498db;
+    }
+
+    .activity-item .icon.orange {
+        background: rgba(255, 107, 53, 0.12);
+        color: #ff6b35;
+    }
+
+    .activity-item .icon.red {
+        background: rgba(231, 76, 60, 0.12);
+        color: #e74c3c;
+    }
+
+    .activity-item .content {
+        flex: 1;
+    }
+
+    .activity-item .content p {
+        font-size: 14px;
+        color: #2d2d2d;
+        margin-bottom: 2px;
+    }
+
+    .activity-item .content .time {
+        font-size: 12px;
+        color: #888;
+    }
+
+    .quick-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        margin-top: 8px;
+    }
+
+    .quick-action-btn {
+        padding: 14px;
+        border: 2px solid #e8e8e8;
+        border-radius: 10px;
+        background: transparent;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-family: inherit;
+        font-size: 13px;
+        font-weight: 600;
+        color: #2d2d2d;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+
+    .quick-action-btn:hover {
+        border-color: #ff6b35;
+        background: rgba(255, 107, 53, 0.04);
+        transform: translateY(-2px);
+    }
+
+    .quick-action-btn .icon {
+        font-size: 18px;
+    }
+
+    /* ===== CLASSES PAGE STYLES ===== */
+    .classes-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 25px;
+        margin-top: 20px;
+    }
+
+    .class-card {
+        background: #fff;
+        border-radius: 16px;
+        padding: 25px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+        border: 1px solid rgba(0, 0, 0, 0.04);
+        transition: all 0.4s ease;
+        text-align: center;
+    }
+
+    .class-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 40px rgba(255, 107, 53, 0.08);
+    }
+
+    .class-card .class-icon {
+        font-size: 40px;
+        margin-bottom: 15px;
+        display: block;
+        color: #ff6b35;
+    }
+
+    .class-card h3 {
+        font-size: 18px;
+        color: #1a1a2e;
+        margin-bottom: 8px;
+    }
+
+    .class-card p {
+        color: #888;
+        font-size: 14px;
+        margin-bottom: 5px;
+    }
+
+    .class-card .class-time {
+        color: #ff6b35;
+        font-weight: 600;
+        font-size: 14px;
+    }
+
+    /* ===== MEMBERSHIPS PAGE STYLES ===== */
+    .membership-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 25px;
+        margin-top: 20px;
+    }
+
+    .membership-card {
+        background: #fff;
+        border-radius: 16px;
+        padding: 30px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+        border: 1px solid rgba(0, 0, 0, 0.04);
+        text-align: center;
+        transition: all 0.4s ease;
+    }
+
+    .membership-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 40px rgba(255, 107, 53, 0.08);
+    }
+
+    .membership-card .plan-icon {
+        font-size: 40px;
+        margin-bottom: 15px;
+        display: block;
+        color: #ff6b35;
+    }
+
+    .membership-card h3 {
+        font-size: 20px;
+        color: #1a1a2e;
+        margin-bottom: 5px;
+    }
+
+    .membership-card .price {
+        font-size: 30px;
+        font-weight: 800;
+        color: #ff6b35;
+        display: block;
+        margin: 10px 0;
+    }
+
+    .membership-card .price .currency {
+        font-size: 20px;
+        font-weight: 700;
+    }
+
+    .membership-card .price .period {
+        font-size: 16px;
+        font-weight: 400;
+        color: #888;
+    }
+
+    .membership-card .price .original-price {
+        font-size: 18px;
+        color: #999;
+        text-decoration: line-through;
+        margin-left: 8px;
+        display: inline;
+    }
+
+    .membership-card .features {
+        list-style: none;
+        padding: 0;
+        margin: 15px 0;
+        text-align: left;
+    }
+
+    .membership-card .features li {
+        padding: 6px 0;
+        color: #666;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .membership-card .features li .check {
+        color: #ff6b35;
+        font-weight: 700;
+    }
+
+    .membership-card .features li .cross {
+        color: #ccc;
+        font-weight: 700;
+    }
+
+    .membership-card .features li.unavailable {
+        color: #bbb;
+    }
+
+    .membership-card.popular {
+        border-color: #ff6b35;
+        background: linear-gradient(180deg, #fff 0%, #fff8f5 100%);
+        transform: scale(1.02);
+        position: relative;
+    }
+
+    body.dark-mode .membership-card.popular {
+        background: linear-gradient(180deg, #2a2a3e 0%, #2a1a1a 100%) !important;
+    }
+
+    .membership-card .popular-badge {
+        position: absolute;
+        top: -12px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: linear-gradient(135deg, #ff6b35, #e5532d);
+        color: #fff;
+        padding: 6px 24px;
+        border-radius: 50px;
+        font-size: 13px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        box-shadow: 0 5px 15px rgba(255, 107, 53, 0.3);
+    }
+
+    .membership-card .select-plan-btn {
+        padding: 12px 30px;
+        border: 2px solid #ff6b35;
+        border-radius: 50px;
+        background: transparent;
+        color: #ff6b35;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        width: 100%;
+        font-size: 15px;
+        font-family: inherit;
+    }
+
+    .membership-card .select-plan-btn:hover {
+        background: #ff6b35;
+        color: #fff;
+        box-shadow: 0 8px 25px rgba(255, 107, 53, 0.3);
+    }
+
+    .membership-card.popular .select-plan-btn {
+        background: linear-gradient(135deg, #ff6b35, #e5532d);
+        color: #fff;
+        border: none;
+        box-shadow: 0 8px 25px rgba(255, 107, 53, 0.3);
+    }
+
+    .membership-card.popular .select-plan-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 35px rgba(255, 107, 53, 0.4);
+    }
+
+    /* ===== ANALYTICS PAGE STYLES ===== */
+    .analytics-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 25px;
+        margin-top: 20px;
+    }
+
+    .analytics-chart {
+        background: #fff;
+        border-radius: 16px;
+        padding: 25px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+        border: 1px solid rgba(0, 0, 0, 0.04);
+        min-height: 250px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .analytics-chart h4 {
+        color: #1a1a2e;
+        font-size: 16px;
+        margin-bottom: 15px;
+    }
+
+    .analytics-chart .chart-placeholder-small {
+        width: 100%;
+        height: 180px;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #888;
+        font-size: 14px;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    body.dark-mode .analytics-chart {
+        background: #1a1a2e !important;
+        border-color: rgba(255, 255, 255, 0.05) !important;
+    }
+
+    body.dark-mode .analytics-chart h4 {
+        color: #e0e0e0 !important;
+    }
+
+    body.dark-mode .analytics-chart .chart-placeholder-small {
+        background: linear-gradient(135deg, #1a1a2e 0%, #2a2a3e 100%);
+        color: #aaa;
+    }
+
+    /* ===== SCROLLBAR ===== */
+    ::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: #0a0a14;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: #ff6b35;
+        border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: #e5532d;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 1024px) {
+        .stats-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .dashboard-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .analytics-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .membership-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (max-width: 768px) {
+        .sidebar {
+            transform: translateX(-100%);
+            width: 280px;
+        }
+
+        .sidebar.open {
+            transform: translateX(0);
+        }
+
+        .main-content {
+            margin-left: 0;
+            padding: 20px;
+        }
+
+        .hamburger {
+            display: flex;
+        }
+
+        html.rtl-mode .sidebar {
+            transform: translateX(100%);
+        }
+
+        html.rtl-mode .sidebar.open {
+            transform: translateX(0);
+        }
+
+        html.rtl-mode .main-content {
+            margin-right: 0;
+        }
+
+        .top-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        .top-header .page-title h1 {
+            font-size: 22px;
+        }
+
+        .top-header .profile-avatar {
+            display: none;
+        }
+
+        .top-header .header-actions .icon-btn#dark-light,
+        .top-header .header-actions .icon-btn#slide-toggle {
+            display: none;
+        }
+
+        .stats-grid {
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .stats-card {
+            padding: 15px 18px;
+        }
+
+        .stats-card .icon-box {
+            width: 40px;
+            height: 40px;
+            font-size: 18px;
+        }
+
+        .stats-card .info .number {
+            font-size: 20px;
+        }
+
+        .dashboard-grid {
+            gap: 20px;
+        }
+
+        .dashboard-card {
+            padding: 18px 20px;
+        }
+
+        .quick-actions {
+            grid-template-columns: 1fr;
+        }
+
+        .chart-placeholder {
+            height: 160px;
+        }
+
+        .classes-grid {
+            grid-template-columns: 1fr;
+            max-width: 400px;
+            margin: 20px auto 0;
+        }
+
+        .membership-grid {
+            grid-template-columns: 1fr;
+            max-width: 400px;
+            margin: 20px auto 0;
+        }
+
+        .membership-card.popular {
+            transform: scale(1);
+        }
+
+        /* Mobile menu items inside the sidebar */
+        .sidebar .mobile-menu-items {
+            display: flex !important;
+            flex-direction: column;
+            gap: 4px;
+            padding: 10px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            margin-top: 5px;
+        }
+
+        .sidebar .mobile-menu-items .mobile-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #888;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            background: transparent;
+            border: none;
+            width: 100%;
+            font-family: inherit;
+        }
+
+        .sidebar .mobile-menu-items .mobile-item:hover {
+            color: #fff;
+            background: rgba(255, 107, 53, 0.08);
+        }
+
+        .sidebar .mobile-menu-items .mobile-item i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .sidebar .mobile-menu-items .mobile-item .avatar-small {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff6b35, #e5532d);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: 700;
+            font-size: 11px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .stats-grid {
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .stats-card {
+            padding: 12px 15px;
+        }
+
+        .stats-card .icon-box {
+            width: 35px;
+            height: 35px;
+            font-size: 16px;
+        }
+
+        .stats-card .info .number {
+            font-size: 18px;
+        }
+
+        .stats-card .info .label {
+            font-size: 11px;
+        }
+
+        .top-header .page-title h1 {
+            font-size: 20px;
+        }
+
+        .classes-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .membership-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .analytics-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== LEFT SIDEBAR ===== -->
+  <aside class="sidebar" id="sidebar">
+    <a href="index.html" class="sidebar-logo">GYM</a>
+
+    <div class="sidebar-user">
+      <div class="avatar">AD</div>
+      <div class="user-info">
+        <div class="name">Admin</div>
+        <div class="role">Administrator</div>
+      </div>
+    </div>
+
+    <ul class="nav-menu">
+      <li><a href="#" class="active" onclick="showPage('dashboard', this)"><i class="fas fa-home"></i> Dashboard</a></li>
+      <li><a href="#" onclick="showPage('users', this)"><i class="fas fa-users"></i> Users <span class="badge">24</span></a></li>
+      <li><a href="#" onclick="showPage('classes', this)"><i class="fas fa-calendar"></i> Classes</a></li>
+      <li><a href="#" onclick="showPage('memberships', this)"><i class="fas fa-dumbbell"></i> Memberships</a></li>
+      <li><a href="#" onclick="showPage('analytics', this)"><i class="fas fa-chart-line"></i> Analytics</a></li>
+    </ul>
+
+    <!-- ===== SIDEBAR FOOTER (Settings & Logout) ===== -->
+    <div class="sidebar-footer">
+      <a href="#" class="footer-item" onclick="showPage('settings', this)">
+        <i class="fas fa-cog"></i> Settings
+      </a>
+      <a href="login.html" class="footer-item logout">
+        <i class="fas fa-sign-out-alt"></i> Logout
+      </a>
+    </div>
+
+    <!-- ===== MOBILE MENU ITEMS (visible only on mobile) ===== -->
+    <div class="mobile-menu-items" style="display:none;">
+      <!-- Dark Mode Toggle -->
+      <button class="mobile-item" id="mobile-dark-light">
+        <i class="fas fa-moon"></i> Dark Mode
+      </button>
+      <!-- RTL Toggle -->
+      <button class="mobile-item" id="mobile-slide-toggle">
+        <i class="fas fa-exchange-alt"></i> RTL Mode
+      </button>
+      <!-- Profile -->
+      <button class="mobile-item" onclick="window.location.href='login.html'">
+        <span class="avatar-small">AD</span> My Profile
+      </button>
+    </div>
+  </aside>
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <div class="main-content">
+
+    <!-- ===== TOP HEADER ===== -->
+    <div class="top-header">
+      <div class="page-title">
+        <h1 id="pageTitle">Dashboard</h1>
+        <p id="pageDescription">Welcome back, Admin. Here is your gym overview.</p>
+      </div>
+      <div class="header-actions">
+        <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+        <button id="slide-toggle" class="icon-btn" title="Toggle RTL/LTR"><i class="fas fa-exchange-alt"></i></button>
+        <button id="dark-light" class="icon-btn dark-btn" title="Toggle Dark/Light Mode">
+          <i class="fas fa-moon"></i>
+        </button>
+        <div class="profile-avatar" onclick="window.location.href='login.html'" title="Profile">AD</div>
+      </div>
+    </div>
+
+    <!-- ===== DASHBOARD PAGE ===== -->
+    <div id="page-dashboard" class="page-section active">
+      <!-- Stats Grid -->
+      <section class="stats-grid">
+        <div class="stats-card">
+          <div class="icon-box blue">
+            <i class="fas fa-users"></i>
+          </div>
+          <div class="info">
+            <span class="number">1,284</span>
+            <span class="label">Total Members</span>
+            <span class="trend up">↑ 12%</span>
+          </div>
+        </div>
+        <div class="stats-card">
+          <div class="icon-box green">
+            <i class="fas fa-user-check"></i>
+          </div>
+          <div class="info">
+            <span class="number">342</span>
+            <span class="label">Active Today</span>
+            <span class="trend up">↑ 8%</span>
+          </div>
+        </div>
+        <div class="stats-card">
+          <div class="icon-box orange">
+            <i class="fas fa-dollar-sign"></i>
+          </div>
+          <div class="info">
+            <span class="number">$12,450</span>
+            <span class="label">Revenue (Monthly)</span>
+            <span class="trend up">↑ 18%</span>
+          </div>
+        </div>
+        <div class="stats-card">
+          <div class="icon-box purple">
+            <i class="fas fa-calendar-check"></i>
+          </div>
+          <div class="info">
+            <span class="number">48</span>
+            <span class="label">Classes This Week</span>
+            <span class="trend up">↑ 5%</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Dashboard Grid -->
+      <section class="dashboard-grid">
+        <div class="dashboard-card">
+          <div class="card-header">
+            <h3><i class="fas fa-chart-line" style="color:#ff6b35; margin-right:8px;"></i> Attendance Overview</h3>
+            <a href="#" onclick="alert('View Details clicked!')">View Details →</a>
+          </div>
+          <div class="chart-placeholder">
+            <span class="chart-icon"><i class="fas fa-chart-bar"></i></span>
+            <span>Chart will be displayed here</span>
+            <span style="font-size: 12px; color: #aaa;">(Weekly attendance data)</span>
+          </div>
+        </div>
+
+        <div class="dashboard-card">
+          <div class="card-header">
+            <h3><i class="fas fa-clock" style="color:#ff6b35; margin-right:8px;"></i> Recent Activity</h3>
+            <a href="#" onclick="alert('View All Activity clicked!')">View All →</a>
+          </div>
+          <ul class="activity-list">
+            <li class="activity-item">
+              <div class="icon green">
+                <i class="fas fa-user-plus"></i>
+              </div>
+              <div class="content">
+                <p><strong>John Doe</strong> joined as a new member</p>
+                <span class="time">2 minutes ago</span>
+              </div>
+            </li>
+            <li class="activity-item">
+              <div class="icon blue">
+                <i class="fas fa-calendar-check"></i>
+              </div>
+              <div class="content">
+                <p><strong>Yoga Class</strong> completed with 15 attendees</p>
+                <span class="time">1 hour ago</span>
+              </div>
+            </li>
+            <li class="activity-item">
+              <div class="icon orange">
+                <i class="fas fa-dollar-sign"></i>
+              </div>
+              <div class="content">
+                <p><strong>Premium Membership</strong> purchased by Sarah Smith</p>
+                <span class="time">3 hours ago</span>
+              </div>
+            </li>
+            <li class="activity-item">
+              <div class="icon red">
+                <i class="fas fa-user-times"></i>
+              </div>
+              <div class="content">
+                <p><strong>Mike Johnson</strong> cancelled membership</p>
+                <span class="time">5 hours ago</span>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Quick Actions -->
+      <section style="max-width: 100%; margin-bottom: 30px;">
+        <div class="dashboard-card">
+          <div class="card-header">
+            <h3><i class="fas fa-bolt" style="color:#ff6b35; margin-right:8px;"></i> Quick Actions</h3>
+            <span style="color: #888; font-size: 13px;">Manage your gym</span>
+          </div>
+          <div class="quick-actions">
+            <button class="quick-action-btn" onclick="alert('Add Member form opened!')">
+              <span class="icon"><i class="fas fa-user-plus"></i></span> Add Member
+            </button>
+            <button class="quick-action-btn" onclick="alert('Schedule Class form opened!')">
+              <span class="icon"><i class="fas fa-calendar-plus"></i></span> Schedule Class
+            </button>
+            <button class="quick-action-btn" onclick="alert('Generate Report opened!')">
+              <span class="icon"><i class="fas fa-file-alt"></i></span> Generate Report
+            </button>
+            <button class="quick-action-btn" onclick="alert('Send Notification opened!')">
+              <span class="icon"><i class="fas fa-bell"></i></span> Send Notification
+            </button>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- ===== USERS PAGE ===== -->
+    <div id="page-users" class="page-section">
+      <div class="stats-grid">
+        <div class="stats-card">
+          <div class="icon-box blue">
+            <i class="fas fa-users"></i>
+          </div>
+          <div class="info">
+            <span class="number">1,284</span>
+            <span class="label">Total Users</span>
+          </div>
+        </div>
+        <div class="stats-card">
+          <div class="icon-box green">
+            <i class="fas fa-user-check"></i>
+          </div>
+          <div class="info">
+            <span class="number">892</span>
+            <span class="label">Active Users</span>
+          </div>
+        </div>
+        <div class="stats-card">
+          <div class="icon-box orange">
+            <i class="fas fa-user-plus"></i>
+          </div>
+          <div class="info">
+            <span class="number">48</span>
+            <span class="label">New This Month</span>
+          </div>
+        </div>
+        <div class="stats-card">
+          <div class="icon-box purple">
+            <i class="fas fa-user-tag"></i>
+          </div>
+          <div class="info">
+            <span class="number">24</span>
+            <span class="label">Admins</span>
+          </div>
+        </div>
+      </div>
+      <div class="dashboard-card">
+        <div class="card-header">
+          <h3><i class="fas fa-users" style="color:#ff6b35; margin-right:8px;"></i> User List</h3>
+          <a href="#" onclick="alert('View All Users clicked!')">View All →</a>
+        </div>
+        <div style="overflow-x: auto;">
+          <table style="width:100%; border-collapse: collapse; font-size:14px;">
+            <thead>
+              <tr style="border-bottom:2px solid #f0f0f0; text-align:left;">
+                <th style="padding:10px 8px;">Name</th>
+                <th style="padding:10px 8px;">Email</th>
+                <th style="padding:10px 8px;">Role</th>
+                <th style="padding:10px 8px;">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom:1px solid #f0f0f0;">
+                <td style="padding:10px 8px;"><strong>John Doe</strong></td>
+                <td style="padding:10px 8px;">john@example.com</td>
+                <td style="padding:10px 8px;"><span style="background:#ff6b35; color:#fff; padding:2px 12px; border-radius:50px; font-size:12px;">Admin</span></td>
+                <td style="padding:10px 8px;"><span style="color:#2ecc71;">● Active</span></td>
+              </tr>
+              <tr style="border-bottom:1px solid #f0f0f0;">
+                <td style="padding:10px 8px;"><strong>Sarah Smith</strong></td>
+                <td style="padding:10px 8px;">sarah@example.com</td>
+                <td style="padding:10px 8px;"><span style="background:#3498db; color:#fff; padding:2px 12px; border-radius:50px; font-size:12px;">Trainer</span></td>
+                <td style="padding:10px 8px;"><span style="color:#2ecc71;">● Active</span></td>
+              </tr>
+              <tr style="border-bottom:1px solid #f0f0f0;">
+                <td style="padding:10px 8px;"><strong>Mike Johnson</strong></td>
+                <td style="padding:10px 8px;">mike@example.com</td>
+                <td style="padding:10px 8px;"><span style="background:#9b59b6; color:#fff; padding:2px 12px; border-radius:50px; font-size:12px;">Member</span></td>
+                <td style="padding:10px 8px;"><span style="color:#e74c3c;">● Inactive</span></td>
+              </tr>
+              <tr>
+                <td style="padding:10px 8px;"><strong>Emily Davis</strong></td>
+                <td style="padding:10px 8px;">emily@example.com</td>
+                <td style="padding:10px 8px;"><span style="background:#2ecc71; color:#fff; padding:2px 12px; border-radius:50px; font-size:12px;">Member</span></td>
+                <td style="padding:10px 8px;"><span style="color:#f39c12;">● Pending</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== CLASSES PAGE ===== -->
+    <div id="page-classes" class="page-section">
+      <div class="stats-grid">
+        <div class="stats-card">
+          <div class="icon-box blue">
+            <i class="fas fa-calendar-alt"></i>
+          </div>
+          <div class="info">
+            <span class="number">48</span>
+            <span class="label">Total Classes</span>
+          </div>
+        </div>
+        <div class="stats-card">
+          <div class="icon-box green">
+            <i class="fas fa-calendar-check"></i>
+          </div>
+          <div class="info">
+            <span class="number">32</span>
+            <span class="label">This Week</span>
+          </div>
+        </div>
+        <div class="stats-card">
+          <div class="icon-box orange">
+            <i class="fas fa-users"></i>
+          </div>
+          <div class="info">
+            <span class="number">15</span>
+            <span class="label">Avg. Attendees</span>
+          </div>
+        </div>
+        <div class="stats-card">
+          <div class="icon-box purple">
+            <i class="fas fa-clock"></i>
+          </div>
+          <div class="info">
+            <span class="number">6</span>
+            <span class="label">Today's Classes</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="classes-grid">
+        <div class="class-card">
+          <span class="class-icon"><i class="fas fa-spa"></i></span>
+          <h3>Yoga Class</h3>
+          <p>Morning flow for beginners</p>
+          <span class="class-time"><i class="far fa-clock" style="margin-right:5px;"></i> 7:00 AM - 8:00 AM</span>
+        </div>
+        <div class="class-card">
+          <span class="class-icon"><i class="fas fa-dumbbell"></i></span>
+          <h3>Strength Training</h3>
+          <p>Build muscle with expert guidance</p>
+          <span class="class-time"><i class="far fa-clock" style="margin-right:5px;"></i> 9:00 AM - 10:30 AM</span>
+        </div>
+        <div class="class-card">
+          <span class="class-icon"><i class="fas fa-running"></i></span>
+          <h3>HIIT Cardio</h3>
+          <p>High intensity interval training</p>
+          <span class="class-time"><i class="far fa-clock" style="margin-right:5px;"></i> 5:00 PM - 6:00 PM</span>
+        </div>
+        <div class="class-card">
+          <span class="class-icon"><i class="fas fa-music"></i></span>
+          <h3>Zumba Dance</h3>
+          <p>Fun dance workout with music</p>
+          <span class="class-time"><i class="far fa-clock" style="margin-right:5px;"></i> 6:30 PM - 7:30 PM</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== MEMBERSHIPS PAGE ===== -->
+    <div id="page-memberships" class="page-section">
+      <div class="stats-grid">
+        <div class="stats-card">
+          <div class="icon-box blue">
+            <i class="fas fa-crown"></i>
+          </div>
+          <div class="info">
+            <span class="number">384</span>
+            <span class="label">Premium Members</span>
+          </div>
+        </div>
+        <div class="stats-card">
+          <div class="icon-box green">
+            <i class="fas fa-star"></i>
+          </div>
+          <div class="info">
+            <span class="number">512</span>
+            <span class="label">Standard Members</span>
+          </div>
+        </div>
+        <div class="stats-card">
+          <div class="icon-box orange">
+            <i class="fas fa-user"></i>
+          </div>
+          <div class="info">
+            <span class="number">388</span>
+            <span class="label">Basic Members</span>
+          </div>
+        </div>
+        <div class="stats-card">
+          <div class="icon-box purple">
+            <i class="fas fa-percent"></i>
+          </div>
+          <div class="info">
+            <span class="number">30%</span>
+            <span class="label">Premium Conversion</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="membership-grid">
+        <!-- Basic Plan -->
+        <div class="membership-card">
+          <span class="plan-icon"><i class="fas fa-dumbbell"></i></span>
+          <h3>Basic</h3>
+          <span class="price"><span class="currency">₹</span>499 <span class="period">/month</span></span>
+          <ul class="features">
+            <li><span class="check">✓</span> Gym Access (Off-peak hours)</li>
+            <li><span class="check">✓</span> Cardio Equipment</li>
+            <li><span class="check">✓</span> Locker Room Access</li>
+            <li><span class="cross">✗</span> Personal Training</li>
+            <li><span class="cross">✗</span> Group Classes</li>
+            <li><span class="cross">✗</span> Nutrition Guidance</li>
+          </ul>
+          <button class="select-plan-btn" onclick="alert('Basic plan selected!')">Get Started</button>
+        </div>
+
+        <!-- Standard Plan (Popular) -->
+        <div class="membership-card popular">
+          <span class="popular-badge">Most Popular</span>
+          <span class="plan-icon"><i class="fas fa-fire"></i></span>
+          <h3>Standard</h3>
+          <span class="price"><span class="currency">₹</span>849 <span class="period">/month</span> <span class="original-price">₹1199</span></span>
+          <ul class="features">
+            <li><span class="check">✓</span> Full Gym Access (All hours)</li>
+            <li><span class="check">✓</span> All Equipment Access</li>
+            <li><span class="check">✓</span> Locker Room Access</li>
+            <li><span class="check">✓</span> 2 Personal Training Sessions</li>
+            <li><span class="check">✓</span> Group Classes (Unlimited)</li>
+            <li><span class="cross">✗</span> Nutrition Guidance</li>
+          </ul>
+          <button class="select-plan-btn" onclick="alert('Standard plan selected!')">Get Started</button>
+        </div>
+
+        <!-- Premium Plan -->
+        <div class="membership-card">
+          <span class="plan-icon"><i class="fas fa-trophy"></i></span>
+          <h3>Premium</h3>
+          <span class="price"><span class="currency">₹</span>1399 <span class="period">/month</span></span>
+          <ul class="features">
+            <li><span class="check">✓</span> Full Gym Access (All hours)</li>
+            <li><span class="check">✓</span> All Equipment Access</li>
+            <li><span class="check">✓</span> Premium Locker Room</li>
+            <li><span class="check">✓</span> Unlimited Personal Training</li>
+            <li><span class="check">✓</span> Group Classes (Unlimited)</li>
+            <li><span class="check">✓</span> Nutrition Guidance</li>
+          </ul>
+          <button class="select-plan-btn" onclick="alert('Premium plan selected!')">Get Started</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== ANALYTICS PAGE ===== -->
+    <div id="page-analytics" class="page-section">
+      <div class="stats-grid">
+        <div class="stats-card">
+          <div class="icon-box blue">
+            <i class="fas fa-chart-bar"></i>
+          </div>
+          <div class="info">
+            <span class="number">87%</span>
+            <span class="label">Retention Rate</span>
+          </div>
+        </div>
+        <div class="stats-card">
+          <div class="icon-box green">
+            <i class="fas fa-user-plus"></i>
+          </div>
+          <div class="info">
+            <span class="number">42</span>
+            <span class="label">New Signups (This Month)</span>
+          </div>
+        </div>
+        <div class="stats-card">
+          <div class="icon-box orange">
+            <i class="fas fa-clock"></i>
+          </div>
+          <div class="info">
+            <span class="number">64%</span>
+            <span class="label">Avg. Session Duration</span>
+          </div>
+        </div>
+        <div class="stats-card">
+          <div class="icon-box purple">
+            <i class="fas fa-star"></i>
+          </div>
+          <div class="info">
+            <span class="number">4.8★</span>
+            <span class="label">Avg. Rating</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="analytics-grid">
+        <div class="analytics-chart">
+          <h4><i class="fas fa-chart-line" style="color:#ff6b35; margin-right:8px;"></i> Monthly Growth</h4>
+          <div class="chart-placeholder-small">
+            <span style="font-size:30px;"><i class="fas fa-chart-line" style="color:#ff6b35;"></i></span>
+            <span>Growth chart here</span>
+          </div>
+        </div>
+        <div class="analytics-chart">
+          <h4><i class="fas fa-users" style="color:#ff6b35; margin-right:8px;"></i> Demographics</h4>
+          <div class="chart-placeholder-small">
+            <span style="font-size:30px;"><i class="fas fa-user-circle" style="color:#ff6b35;"></i></span>
+            <span>Age/Gender distribution</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== SETTINGS PAGE ===== -->
+    <div id="page-settings" class="page-section">
+      <div class="dashboard-card">
+        <div class="card-header">
+          <h3><i class="fas fa-cog" style="color:#ff6b35; margin-right:8px;"></i> Settings</h3>
+        </div>
+        <div style="padding: 20px 0;">
+          <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid #f0f0f0;">
+            <div>
+              <h4 style="font-size:16px; color:#1a1a2e;"><i class="fas fa-moon" style="color:#ff6b35; margin-right:8px;"></i> Dark Mode</h4>
+              <p style="color:#888; font-size:14px;">Toggle dark/light theme</p>
+            </div>
+            <button onclick="document.getElementById('dark-light').click()" style="padding:8px 25px; border-radius:50px; border:2px solid #ff6b35; background:transparent; color:#ff6b35; font-weight:600; cursor:pointer;">Toggle</button>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid #f0f0f0;">
+            <div>
+              <h4 style="font-size:16px; color:#1a1a2e;"><i class="fas fa-exchange-alt" style="color:#ff6b35; margin-right:8px;"></i> RTL Mode</h4>
+              <p style="color:#888; font-size:14px;">Toggle right-to-left layout</p>
+            </div>
+            <button onclick="document.getElementById('slide-toggle').click()" style="padding:8px 25px; border-radius:50px; border:2px solid #ff6b35; background:transparent; color:#ff6b35; font-weight:600; cursor:pointer;">Toggle</button>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px 0;">
+            <div>
+              <h4 style="font-size:16px; color:#1a1a2e;"><i class="fas fa-bell" style="color:#ff6b35; margin-right:8px;"></i> Notifications</h4>
+              <p style="color:#888; font-size:14px;">Email and push notifications</p>
+            </div>
+            <button onclick="alert('Notification settings opened!')" style="padding:8px 25px; border-radius:50px; border:2px solid #ff6b35; background:#ff6b35; color:#fff; font-weight:600; cursor:pointer;">Manage</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== JAVASCRIPT ===== -->
+  <script>
+    console.log("Admin Panel with Sidebar loaded!");
+
+    // ===== SHOW PAGE FUNCTION =====
+    function showPage(page, element) {
+        // Hide all pages
+        document.querySelectorAll('.page-section').forEach(function(section) {
+            section.classList.remove('active');
+        });
+
+        // Show selected page
+        var targetPage = document.getElementById('page-' + page);
+        if (targetPage) {
+            targetPage.classList.add('active');
+        }
+
+        // Update active nav link
+        document.querySelectorAll('.nav-menu li a').forEach(function(link) {
+            link.classList.remove('active');
+        });
+        if (element) {
+            element.classList.add('active');
+        }
+
+        // Update page title
+        var titles = {
+            'dashboard': 'Dashboard',
+            'users': 'User Management',
+            'classes': 'Class Schedule',
+            'memberships': 'Membership Plans',
+            'analytics': 'Analytics & Reports',
+            'settings': 'Settings'
+        };
+
+        var descriptions = {
+            'dashboard': 'Welcome back, Admin. Here is your gym overview.',
+            'users': 'Manage all registered users and their roles.',
+            'classes': 'View and manage all fitness classes.',
+            'memberships': 'Manage membership plans and subscriptions.',
+            'analytics': 'View detailed analytics and insights.',
+            'settings': 'Configure your gym management settings.'
+        };
+
+        document.getElementById('pageTitle').textContent = titles[page] || 'Dashboard';
+        document.getElementById('pageDescription').textContent = descriptions[page] || '';
+
+        // Close sidebar on mobile
+        if (window.innerWidth <= 768) {
+            document.getElementById('sidebar').classList.remove('open');
+            document.getElementById('hamburger').classList.remove('active');
+        }
+    }
+
+    // ===== SIDEBAR TOGGLE (Mobile) =====
+    function initHamburger() {
+        var hamburger = document.getElementById('hamburger');
+        var sidebar = document.getElementById('sidebar');
+
+        if (hamburger && sidebar) {
+            var newHamburger = hamburger.cloneNode(true);
+            hamburger.parentNode.replaceChild(newHamburger, hamburger);
+
+            hamburger = document.getElementById('hamburger');
+
+            hamburger.addEventListener('click', function(e) {
+                e.stopPropagation();
+                this.classList.toggle('active');
+                sidebar.classList.toggle('open');
+                console.log("Hamburger clicked!");
+            });
+        }
+    }
+
+    initHamburger();
+
+    // Close sidebar when clicking outside on mobile
+    document.addEventListener('click', function(e) {
+        var sidebar = document.getElementById('sidebar');
+        var hamburger = document.getElementById('hamburger');
+        if (window.innerWidth <= 768) {
+            if (sidebar && hamburger && !sidebar.contains(e.target) && !hamburger.contains(e.target)) {
+                sidebar.classList.remove('open');
+                hamburger.classList.remove('active');
+            }
+        }
+    });
+
+    // ===== DARK/LIGHT MODE =====
+    var darkBtn = document.getElementById('dark-light');
+    var mobileDarkBtn = document.getElementById('mobile-dark-light');
+    var isDark = false;
+
+    function toggleDarkMode(btnElement) {
+        isDark = !isDark;
+        if (isDark) {
+            document.body.classList.add('dark-mode');
+            if (darkBtn) darkBtn.innerHTML = '<i class="fas fa-sun"></i>';
+            if (mobileDarkBtn) mobileDarkBtn.innerHTML = '<i class="fas fa-sun"></i> Light Mode';
+            localStorage.setItem('darkMode', 'enabled');
+            console.log("Dark mode ON");
+        } else {
+            document.body.classList.remove('dark-mode');
+            if (darkBtn) darkBtn.innerHTML = '<i class="fas fa-moon"></i>';
+            if (mobileDarkBtn) mobileDarkBtn.innerHTML = '<i class="fas fa-moon"></i> Dark Mode';
+            localStorage.setItem('darkMode', 'disabled');
+            console.log("Dark mode OFF");
+        }
+    }
+
+    if (darkBtn) {
+        if (localStorage.getItem('darkMode') === 'enabled') {
+            document.body.classList.add('dark-mode');
+            darkBtn.innerHTML = '<i class="fas fa-sun"></i>';
+            isDark = true;
+        }
+
+        darkBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            toggleDarkMode(this);
+        });
+    }
+
+    if (mobileDarkBtn) {
+        if (localStorage.getItem('darkMode') === 'enabled') {
+            mobileDarkBtn.innerHTML = '<i class="fas fa-sun"></i> Light Mode';
+        }
+
+        mobileDarkBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            toggleDarkMode(this);
+            // Close mobile menu after clicking
+            if (window.innerWidth <= 768) {
+                var sidebar = document.getElementById('sidebar');
+                var hamburger = document.getElementById('hamburger');
+                if (hamburger) hamburger.classList.remove('active');
+                if (sidebar) sidebar.classList.remove('open');
+            }
+        });
+    }
+
+    // ===== RTL/LTR TOGGLE =====
+    var slideBtn = document.getElementById('slide-toggle');
+    var mobileSlideBtn = document.getElementById('mobile-slide-toggle');
+    var isRTL = false;
+
+    function toggleRTL() {
+        isRTL = !isRTL;
+        if (isRTL) {
+            document.documentElement.classList.add('rtl-mode');
+            localStorage.setItem('rtlMode', 'enabled');
+            console.log("RTL mode ON");
+        } else {
+            document.documentElement.classList.remove('rtl-mode');
+            localStorage.setItem('rtlMode', 'disabled');
+            console.log("RTL mode OFF");
+        }
+
+        var mainContent = document.querySelector('.main-content');
+        mainContent.style.transition = 'all 0.5s ease';
+        mainContent.style.opacity = '0.7';
+        setTimeout(function() {
+            mainContent.style.opacity = '1';
+        }, 300);
+    }
+
+    if (slideBtn) {
+        if (localStorage.getItem('rtlMode') === 'enabled') {
+            document.documentElement.classList.add('rtl-mode');
+            isRTL = true;
+        }
+
+        slideBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            toggleRTL();
+        });
+    }
+
+    if (mobileSlideBtn) {
+        mobileSlideBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            toggleRTL();
+            // Close mobile menu after clicking
+            if (window.innerWidth <= 768) {
+                var sidebar = document.getElementById('sidebar');
+                var hamburger = document.getElementById('hamburger');
+                if (hamburger) hamburger.classList.remove('active');
+                if (sidebar) sidebar.classList.remove('open');
+            }
+        });
+    }
+
+    // ===== SHOW MOBILE MENU ITEMS ONLY ON MOBILE =====
+    function handleMobileMenuItems() {
+        var mobileItems = document.querySelector('.mobile-menu-items');
+        var desktopProfile = document.querySelector('.top-header .profile-avatar');
+        var desktopDark = document.querySelector('.top-header .header-actions #dark-light');
+        var desktopRTL = document.querySelector('.top-header .header-actions #slide-toggle');
+        
+        if (window.innerWidth <= 768) {
+            if (mobileItems) mobileItems.style.display = 'flex';
+            if (desktopProfile) desktopProfile.style.display = 'none';
+            if (desktopDark) desktopDark.style.display = 'none';
+            if (desktopRTL) desktopRTL.style.display = 'none';
+        } else {
+            if (mobileItems) mobileItems.style.display = 'none';
+            if (desktopProfile) desktopProfile.style.display = 'flex';
+            if (desktopDark) desktopDark.style.display = 'flex';
+            if (desktopRTL) desktopRTL.style.display = 'flex';
+        }
+    }
+
+    handleMobileMenuItems();
+    window.addEventListener('resize', handleMobileMenuItems);
+
+    console.log("✅ Dashboard with Sidebar loaded successfully!");
+  </script>
+</body>
+</html>
